@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 class LEPINECHEVALIERController extends AbstractController
 {
@@ -18,12 +19,21 @@ class LEPINECHEVALIERController extends AbstractController
         ]);
     }
     /**
-     * @Route("/traitement", name="traitement")
+     * @Route("/srv/login", name="login")
      */
-    public function traitement(): Response
+    public function login(Request $request): Response
     {
-        return $this->render('lepinechevalier/traitement.html.twig', [
-            'controller_name' => 'LEPINECHEVALIERController',
+        $login = $request->get("login");
+        $password = $request->request->get("password");
+        if ($login=="root" && $password="toor")
+            $message = "connexion réussite";
+        else
+        $message = "erreur d'identification";
+        return $this->render('lepinechevalier/login.html.twig',
+        [
+            'login' =>$login,
+            'password' =>$password,
+            'message'=> $message,
         ]);
     }
 }
