@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\UtilisateurRepository;
+use App\Repository\AutorisationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=UtilisateurRepository::class)
+ * @ORM\Entity(repositoryClass=AutorisationRepository::class)
  */
-class Utilisateur
+class Autorisation
 {
     /**
      * @ORM\Id
@@ -20,22 +20,17 @@ class Utilisateur
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="boolean")
      */
-    private $Nom;
+    private $Lecture;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="boolean")
      */
-    private $login;
+    private $Ecriture;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $password;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Acces::class, mappedBy="Util", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Acces::class, mappedBy="Auto", orphanRemoval=true)
      */
     private $acces;
 
@@ -49,38 +44,26 @@ class Utilisateur
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getLecture(): ?bool
     {
-        return $this->Nom;
+        return $this->Lecture;
     }
 
-    public function setNom(string $Nom): self
+    public function setLecture(bool $Lecture): self
     {
-        $this->Nom = $Nom;
+        $this->Lecture = $Lecture;
 
         return $this;
     }
 
-    public function getLogin(): ?string
+    public function getEcriture(): ?bool
     {
-        return $this->login;
+        return $this->Ecriture;
     }
 
-    public function setLogin(string $login): self
+    public function setEcriture(bool $Ecriture): self
     {
-        $this->login = $login;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
+        $this->Ecriture = $Ecriture;
 
         return $this;
     }
@@ -97,7 +80,7 @@ class Utilisateur
     {
         if (!$this->acces->contains($acce)) {
             $this->acces[] = $acce;
-            $acce->setUtil($this);
+            $acce->setAuto($this);
         }
 
         return $this;
@@ -107,8 +90,8 @@ class Utilisateur
     {
         if ($this->acces->removeElement($acce)) {
             // set the owning side to null (unless already changed)
-            if ($acce->getUtil() === $this) {
-                $acce->setUtil(null);
+            if ($acce->getAuto() === $this) {
+                $acce->setAuto(null);
             }
         }
 
