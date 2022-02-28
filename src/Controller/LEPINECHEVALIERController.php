@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Utilisateur;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class LEPINECHEVALIERController extends AbstractController
 {
@@ -33,7 +34,25 @@ class LEPINECHEVALIERController extends AbstractController
         ]);
     }
     
+    /**
+     * @Route("/table", name="table")
+     */
+    public function table(EntityManagerInterface $manager): Response
+    {
+        $mesUtilisateurs=$manager->getRepository(Utilisateur::class)->findAll();
+        return $this->render('lepinechevalier/table.html.twig',['lst_utilisateurs' => $mesUtilisateurs]);
+    }
 
+    /**
+    * @Route("/supprimerUtilisateur/{id}",name="supprimer_Utilisateur")
+    */
+    public function supprimerUtilisateur(EntityManagerInterface $manager,Utilisateur $editutil): Response 
+    {
+        $manager->remove($editutil);
+        $manager->flush();
+
+    return $this->redirectToRoute ('table');
+    }
 
     /**
     * @Route("/creeruti", name="creeruti")
