@@ -79,18 +79,20 @@ class LEPINECHEVALIERController extends AbstractController
      */
     public function login(Request $request, EntityManagerInterface $manager): Response
     {
-        $login = $request->get("pseudo");
+        $login = $request->request->get("pseudo");
         $password = $request->request->get("pass");
     
         $reponse = $manager -> getRepository(Utilisateur :: class) -> findOneBy([ 'login' => $login]);
-        if($reponse==NULL)
-            $message = 'Utilisateur inconnu';
-        else
+        if($reponse == NULL){
+            $message = "Utilisateur inconnu";
+        }
+        else {
             $hash=($reponse ->getPassword());
             if (password_verify($password, $hash))
                 $message = "connexion réussite";    
             else
              $message = "erreur de mot de passe";
+            }
         return $this->render('lepinechevalier/login.html.twig',
         [
             'login' =>$login,
